@@ -4,7 +4,7 @@ from itertools import combinations, chain
 from scipy.special import comb
 from exceptions import *
 
-
+# comment
 num_dict = {"2": 2, "3": 3, "4": 4, "5": 5, "6": 6, "7": 7, "8": 8, "9": 9, "T": 10, "J": 11, "Q": 12, "K": 13, "A": 14}
 suit_dict = {"d": 0, "c": 1, "s": 2, "h": 3}
 rev_num_dict = {v: k for k, v in num_dict.items()}
