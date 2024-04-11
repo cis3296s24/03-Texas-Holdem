@@ -264,4 +264,50 @@ if __name__ == '__main__':
     print(f"Tie Rate: {tie_rate*100:.2f}%")
 
 
+import unittest
+import numpy as np
+
+# Ensure the Card and Ranker classes are imported or defined here
+
+class TestPokerHandRanking(unittest.TestCase):
+
+    def test_straight_flush(self):
+        hand = [Card(10, 1), Card(11, 1), Card(12, 1), Card(13, 1), Card(9, 1)]
+        self.assertEqual(Ranker.rank_one_hand(hand), (8, [13]), "Failed to recognize straight flush")
+
+    def test_four_of_a_kind(self):
+        hand = [Card(3, 1), Card(3, 2), Card(3, 3), Card(3, 4), Card(5, 1)]
+        self.assertEqual(Ranker.rank_one_hand(hand), (7, [3, 5]), "Failed to recognize four of a kind")
+
+    def test_full_house(self):
+        hand = [Card(6, 1), Card(6, 2), Card(6, 3), Card(9, 1), Card(9, 2)]
+        self.assertEqual(Ranker.rank_one_hand(hand), (6, [6, 9]), "Failed to recognize full house")
+
+    def test_flush(self):
+        hand = [Card(2, 2), Card(5, 2), Card(7, 2), Card(8, 2), Card(10, 2)]
+        self.assertEqual(Ranker.rank_one_hand(hand), (5, [10, 8, 7, 5, 2]), "Failed to recognize flush")
+
+    def test_straight(self):
+        hand = [Card(4, 1), Card(5, 2), Card(6, 3), Card(7, 4), Card(8, 1)]
+        self.assertEqual(Ranker.rank_one_hand(hand), (4, [8]), "Failed to recognize straight")
+
+    def test_three_of_a_kind(self):
+        hand = [Card(12, 1), Card(12, 2), Card(12, 3), Card(5, 4), Card(8, 1)]
+        self.assertEqual(Ranker.rank_one_hand(hand), (3, [12, 8, 5]), "Failed to recognize three of a kind")
+
+    def test_two_pairs(self):
+        hand = [Card(9, 1), Card(9, 2), Card(5, 3), Card(5, 4), Card(7, 1)]
+        self.assertEqual(Ranker.rank_one_hand(hand), (2, [9, 5, 7]), "Failed to recognize two pairs")
+
+    def test_one_pair(self):
+        hand = [Card(4, 1), Card(4, 2), Card(6, 3), Card(7, 4), Card(8, 1)]
+        self.assertEqual(Ranker.rank_one_hand(hand), (1, [4, 8, 7, 6]), "Failed to recognize one pair")
+
+    def test_high_card(self):
+        hand = [Card(2, 1), Card(4, 2), Card(6, 3), Card(8, 4), Card(10, 1)]
+        # Note: For high card, the entire hand acts as kickers, sorted in descending order.
+        self.assertEqual(Ranker.rank_one_hand(hand), (0, [10, 8, 6, 4, 2]), "Failed to correctly identify high card")
+
+if __name__ == '__main__':
+    unittest.main()
 
