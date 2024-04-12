@@ -56,7 +56,7 @@ class Ranker:
 
     @staticmethod
     def rank_one_hand(hand):
-    
+
         counts = np.array([card.count for card in hand])
         colors = np.array([card.color for card in hand])
 
@@ -198,17 +198,18 @@ class Ranker:
 
 import random
 
+
 # TO DO: add invalid input catching
 def inputcard(player, card_num):
     count = int(input(f"Enter count for Player {player}'s card {card_num} (1-13, where 10-13 are J, Q, K, A): "))
     suit = int(input(f"Enter suit for Player {player}'s card {card_num} (1-4): "))
     return Card(count, suit)
 
-
 def simulate_poker_games(num_simulations=10000):
     player1_wins = 0
     player2_wins = 0
     ties = 0
+
     player1_hand = [inputcard(1, 1), inputcard(1, 2)]
     player2_hand = [inputcard(2, 1), inputcard(2, 2)]
     players_hands = player1_hand + player2_hand
@@ -219,6 +220,30 @@ def simulate_poker_games(num_simulations=10000):
         community_cards = deck[:5]
         player1_best_hand = Ranker.rank_all_hands([player1_hand + community_cards], return_all=False)
         player2_best_hand = Ranker.rank_all_hands([player2_hand + community_cards], return_all=False)
+
+
+    for _ in range(num_simulations):
+        deck = create_deck()
+        player1_hand = [Card(10, 1), Card(10, 2)]
+        player2_hand = [Card(13, 2), Card(12, 3)]
+        players_hands = player1_hand + player2_hand
+        # Remove the specific cards for Player 1 and Player 2 from the deck
+        deck = [card for card in deck if card not in players_hands]
+
+        # Shuffle the remaining deck
+        random.shuffle(deck)
+
+        # Assign specific hands to Player 1 and Player 2
+
+
+        # Assuming the next five cards are community cards
+        community_cards = deck[:5]
+
+        # Evaluate hands (assuming Ranker.rank_all_hands and related evaluation logic is properly defined)
+        player1_best_hand = Ranker.rank_all_hands([player1_hand + community_cards], return_all=False)
+        player2_best_hand = Ranker.rank_all_hands([player2_hand + community_cards], return_all=False)
+
+        # Compare and record results
         if player1_best_hand > player2_best_hand:
             player1_wins += 1
         elif player2_best_hand > player1_best_hand:
@@ -226,11 +251,15 @@ def simulate_poker_games(num_simulations=10000):
         else:
             ties += 1
 
+
+
+    # Calculate and return win rates and tie rate
     player1_win_rate = player1_wins / num_simulations
     player2_win_rate = player2_wins / num_simulations
     tie_rate = ties / num_simulations
 
     return player1_win_rate, player2_win_rate, tie_rate
+
 
 
 if __name__ == '__main__':
@@ -261,6 +290,7 @@ import numpy as np
 # Ensure the Card and Ranker classes are imported or defined here
 
 class TestPokerHandRanking(unittest.TestCase):
+
 
     def test_card_suit_limits(self):
         # Test the boundaries for card color
@@ -338,10 +368,6 @@ class TestPokerHandRanking(unittest.TestCase):
             Card(0, 1)  # Below valid range
         with self.assertRaises(ValueError):
             Card(14, 1)  # Above valid range
-
-    
-
-    
 
 if __name__ == '__main__':
     unittest.main()
