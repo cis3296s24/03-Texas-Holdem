@@ -16,6 +16,11 @@ class Ranker:
 
     @staticmethod
     def rank_one_hand(hand):
+
+        print("Debug: Hand size is", len(hand))
+        if len(hand) != 2:
+            raise ValueError("Invalid hand size. Hand must contain exactly 5 cards.")
+
         counts = np.array([card.count for card in hand])
         colors = np.array([card.color for card in hand])
 
