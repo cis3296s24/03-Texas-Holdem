@@ -56,6 +56,7 @@ class Ranker:
 
     @staticmethod
     def rank_one_hand(hand):
+
         counts = np.array([card.count for card in hand])
         colors = np.array([card.color for card in hand])
 
@@ -198,10 +199,28 @@ class Ranker:
 import random
 
 
+# TO DO: add invalid input catching
+def inputcard(player, card_num):
+    count = int(input(f"Enter count for Player {player}'s card {card_num} (1-13, where 10-13 are J, Q, K, A): "))
+    suit = int(input(f"Enter suit for Player {player}'s card {card_num} (1-4): "))
+    return Card(count, suit)
+
 def simulate_poker_games(num_simulations=10000):
     player1_wins = 0
     player2_wins = 0
     ties = 0
+
+    player1_hand = [inputcard(1, 1), inputcard(1, 2)]
+    player2_hand = [inputcard(2, 1), inputcard(2, 2)]
+    players_hands = player1_hand + player2_hand
+    for i in range(num_simulations):
+        deck = create_deck()
+        deck = [card for card in deck if card not in players_hands]
+        random.shuffle(deck)
+        community_cards = deck[:5]
+        player1_best_hand = Ranker.rank_all_hands([player1_hand + community_cards], return_all=False)
+        player2_best_hand = Ranker.rank_all_hands([player2_hand + community_cards], return_all=False)
+
 
     for _ in range(num_simulations):
         deck = create_deck()
@@ -232,13 +251,14 @@ def simulate_poker_games(num_simulations=10000):
         else:
             ties += 1
 
+
+
     # Calculate and return win rates and tie rate
     player1_win_rate = player1_wins / num_simulations
     player2_win_rate = player2_wins / num_simulations
     tie_rate = ties / num_simulations
 
     return player1_win_rate, player2_win_rate, tie_rate
-
 
 
 
@@ -270,6 +290,30 @@ import numpy as np
 # Ensure the Card and Ranker classes are imported or defined here
 
 class TestPokerHandRanking(unittest.TestCase):
+
+
+    def test_card_suit_limits(self):
+        # Test the boundaries for card color
+        with self.assertRaises(ValueError):
+            Card(10, -1)  # Negative color
+        with self.assertRaises(ValueError):
+            Card(10, 6)  # Color exceeding upper limit
+
+    def test_card_inequality(self):
+        # Test inequality of two different cards
+        card1 = Card(9, 3)
+        card2 = Card(9, 4)
+        self.assertNotEqual(card1, card2, "Different cards are considered equal")
+
+    def test_print_card(self):
+        # Test the print representation of a card which will be used for the UI
+        card = Card(12, 4)
+        self.assertEqual(repr(card), 'Card(count=12, color=4)', "Print representation of card is incorrect")
+
+    def test_card_creation_success(self):
+        # Test successful creation of a card within valid boundaries
+        card = Card(1, 1)
+        self.assertIsInstance(card, Card, "Card is not instantiated correctly")
 
     def test_straight_flush(self):
         hand = [Card(10, 1), Card(11, 1), Card(12, 1), Card(13, 1), Card(9, 1)]
@@ -307,6 +351,23 @@ class TestPokerHandRanking(unittest.TestCase):
         hand = [Card(2, 1), Card(4, 2), Card(6, 3), Card(8, 4), Card(10, 1)]
         # Note: For high card, the entire hand acts as kickers, sorted in descending order.
         self.assertEqual(Ranker.rank_one_hand(hand), (0, [10, 8, 6, 4, 2]), "Failed to correctly identify high card")
+    
+    #  Confirms that the string representation of the Card class is as expected.
+    def test_card_representation(self):
+        card = Card(11, 3)
+        self.assertEqual(repr(card), 'Card(count=11, color=3)', "Card representation does not match")
+
+    def test_invalid_card_color(self):
+        with self.assertRaises(ValueError):
+            Card(5, 0)  # Below valid range
+        with self.assertRaises(ValueError):
+            Card(5, 5)  # Above valid range
+
+    def test_invalid_card_count(self):
+        with self.assertRaises(ValueError):
+            Card(0, 1)  # Below valid range
+        with self.assertRaises(ValueError):
+            Card(14, 1)  # Above valid range
 
 if __name__ == '__main__':
     unittest.main()
