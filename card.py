@@ -1,5 +1,40 @@
+import unittest
+
 import numpy as np
-import card
+
+
+class Card:
+    def __init__(self, count: int, color: int):
+        self._count = None
+        self._color = None
+        self.count = count  # Use the setter to check value
+        self.color = color  # Use the setter to check value
+
+    @property
+    def count(self):
+        return self._count
+
+    @count.setter
+    def count(self, value):
+        if not 1 <= value <= 13:
+            raise ValueError("Count must be between 1 and 13.")
+        self._count = value
+
+    @property
+    def color(self):
+        return self._color
+
+    @color.setter
+    def color(self, value):
+        if not 1 <= value <= 4:
+            raise ValueError("Color must be between 1 and 4.")
+        self._color = value
+
+    def __repr__(self):
+        return f"Card(count={self.count}, color={self.color})"
+
+def set_card():
+    return [Card(count, color) for color in range(1, 5) for count in range(1, 14)]
 
 
 class Ranker:
@@ -157,3 +192,122 @@ class Ranker:
             kickers = np.sort(np.setdiff1d(counts, pair_value))[::-1]  # Highest kickers
             return (1, [pair_value[0]] + list(kickers[:3]))  # Include top 3 kickers
         return (rank, [])
+
+
+
+import random
+
+
+def simulate_poker_games(num_simulations=10000):
+    player1_wins = 0
+    player2_wins = 0
+    ties = 0
+
+    for _ in range(num_simulations):
+        deck = create_deck()
+        player1_hand = [Card(10, 1), Card(10, 2)]
+        player2_hand = [Card(13, 2), Card(12, 3)]
+        players_hands = player1_hand + player2_hand
+        # Remove the specific cards for Player 1 and Player 2 from the deck
+        deck = [card for card in deck if card not in players_hands]
+
+        # Shuffle the remaining deck
+        random.shuffle(deck)
+
+        # Assign specific hands to Player 1 and Player 2
+
+
+        # Assuming the next five cards are community cards
+        community_cards = deck[:5]
+
+        # Evaluate hands (assuming Ranker.rank_all_hands and related evaluation logic is properly defined)
+        player1_best_hand = Ranker.rank_all_hands([player1_hand + community_cards], return_all=False)
+        player2_best_hand = Ranker.rank_all_hands([player2_hand + community_cards], return_all=False)
+
+        # Compare and record results
+        if player1_best_hand > player2_best_hand:
+            player1_wins += 1
+        elif player2_best_hand > player1_best_hand:
+            player2_wins += 1
+        else:
+            ties += 1
+
+    # Calculate and return win rates and tie rate
+    player1_win_rate = player1_wins / num_simulations
+    player2_win_rate = player2_wins / num_simulations
+    tie_rate = ties / num_simulations
+
+    return player1_win_rate, player2_win_rate, tie_rate
+
+
+
+
+if __name__ == '__main__':
+    # Function to create a deck of 52 cards
+    def create_deck():
+        return [Card(count, color) for color in range(1, 5) for count in range(1, 14)]
+
+    # Shuffle the deck
+    def shuffle_deck(deck):
+        random.shuffle(deck)
+        return deck
+
+    # Deal hands to two players
+    def deal_hands(deck, num_cards=5):
+        return deck[:num_cards], deck[num_cards:num_cards*2]
+
+
+    player1_win_rate, player2_win_rate, tie_rate = simulate_poker_games()
+
+    print(f"Player 1 Win Rate: {player1_win_rate*100:.2f}%")
+    print(f"Player 2 Win Rate: {player2_win_rate*100:.2f}%")
+    print(f"Tie Rate: {tie_rate*100:.2f}%")
+
+
+import unittest
+import numpy as np
+
+# Ensure the Card and Ranker classes are imported or defined here
+
+class TestPokerHandRanking(unittest.TestCase):
+
+    def test_straight_flush(self):
+        hand = [Card(10, 1), Card(11, 1), Card(12, 1), Card(13, 1), Card(9, 1)]
+        self.assertEqual(Ranker.rank_one_hand(hand), (8, [13]), "Failed to recognize straight flush")
+
+    def test_four_of_a_kind(self):
+        hand = [Card(3, 1), Card(3, 2), Card(3, 3), Card(3, 4), Card(5, 1)]
+        self.assertEqual(Ranker.rank_one_hand(hand), (7, [3, 5]), "Failed to recognize four of a kind")
+
+    def test_full_house(self):
+        hand = [Card(6, 1), Card(6, 2), Card(6, 3), Card(9, 1), Card(9, 2)]
+        self.assertEqual(Ranker.rank_one_hand(hand), (6, [6, 9]), "Failed to recognize full house")
+
+    def test_flush(self):
+        hand = [Card(2, 2), Card(5, 2), Card(7, 2), Card(8, 2), Card(10, 2)]
+        self.assertEqual(Ranker.rank_one_hand(hand), (5, [10, 8, 7, 5, 2]), "Failed to recognize flush")
+
+    def test_straight(self):
+        hand = [Card(4, 1), Card(5, 2), Card(6, 3), Card(7, 4), Card(8, 1)]
+        self.assertEqual(Ranker.rank_one_hand(hand), (4, [8]), "Failed to recognize straight")
+
+    def test_three_of_a_kind(self):
+        hand = [Card(12, 1), Card(12, 2), Card(12, 3), Card(5, 4), Card(8, 1)]
+        self.assertEqual(Ranker.rank_one_hand(hand), (3, [12, 8, 5]), "Failed to recognize three of a kind")
+
+    def test_two_pairs(self):
+        hand = [Card(9, 1), Card(9, 2), Card(5, 3), Card(5, 4), Card(7, 1)]
+        self.assertEqual(Ranker.rank_one_hand(hand), (2, [9, 5, 7]), "Failed to recognize two pairs")
+
+    def test_one_pair(self):
+        hand = [Card(4, 1), Card(4, 2), Card(6, 3), Card(7, 4), Card(8, 1)]
+        self.assertEqual(Ranker.rank_one_hand(hand), (1, [4, 8, 7, 6]), "Failed to recognize one pair")
+
+    def test_high_card(self):
+        hand = [Card(2, 1), Card(4, 2), Card(6, 3), Card(8, 4), Card(10, 1)]
+        # Note: For high card, the entire hand acts as kickers, sorted in descending order.
+        self.assertEqual(Ranker.rank_one_hand(hand), (0, [10, 8, 6, 4, 2]), "Failed to correctly identify high card")
+
+if __name__ == '__main__':
+    unittest.main()
+
