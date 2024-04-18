@@ -7,7 +7,11 @@ from ranker import *
 class Hand:
 
     def __init__(self, hand_limit=2):
-
+        #self.handOne = []
+        #self.handTwo = []
+        #self.handThree = []
+        #self.handFour = []
+        #self.handFive = []
         self.hand_limit = hand_limit
         self.card_arr = np.zeros(shape=(0, hand_limit), dtype=np.int)
 

@@ -56,6 +56,7 @@ class Ranker:
 
     @staticmethod
     def rank_one_hand(hand):
+
         counts = np.array([card.count for card in hand])
         colors = np.array([card.color for card in hand])
 
@@ -203,6 +204,12 @@ def input_card():
     return Card(rank, suit)
 
 
+# TO DO: add invalid input catching
+def inputcard(player, card_num):
+    count = int(input(f"Enter count for Player {player}'s card {card_num} (1-13, where 10-13 are J, Q, K, A): "))
+    suit = int(input(f"Enter suit for Player {player}'s card {card_num} (1-4): "))
+    return Card(count, suit)
+
 def simulate_poker_games(num_simulations=10000):
     num_players = int(input("Enter the number of players (1-5): "))
     num_players = min(max(num_players, 1), 5)
@@ -211,6 +218,18 @@ def simulate_poker_games(num_simulations=10000):
     for i in range(num_players):
         print(f"Define Player {i+1}'s hand:")
         players_hands.append([input_card() for _ in range(2)])
+
+    player1_hand = [inputcard(1, 1), inputcard(1, 2)]
+    player2_hand = [inputcard(2, 1), inputcard(2, 2)]
+    players_hands = player1_hand + player2_hand
+    for i in range(num_simulations):
+        deck = create_deck()
+        deck = [card for card in deck if card not in players_hands]
+        random.shuffle(deck)
+        community_cards = deck[:5]
+        player1_best_hand = Ranker.rank_all_hands([player1_hand + community_cards], return_all=False)
+        player2_best_hand = Ranker.rank_all_hands([player2_hand + community_cards], return_all=False)
+
 
     for _ in range(num_simulations):
         deck = create_deck()
@@ -239,10 +258,11 @@ def simulate_poker_games(num_simulations=10000):
             if winners[i]:
                 player_wins[i] += 1
 
+
+
     # Calculate and return win rates and tie rate
     win_rates = [wins / num_simulations for wins in player_wins]
     return win_rates
-
 
 
 
@@ -265,6 +285,5 @@ if __name__ == '__main__':
     win_rates = simulate_poker_games()
     for i, rate in enumerate(win_rates):
         print(f"Player {i+1} Win Rate: {rate*100:.2f}%")
-
 
 
