@@ -9,6 +9,7 @@ pygame.init()
 screen = pygame.display.set_mode((1080, 720))
 clock = pygame.time.Clock()
 running = True
+convert = True
 
 pygame.display.set_caption("Texas Hold em Odds Calculator")
 
@@ -21,6 +22,7 @@ pokertable_image = pygame.transform.scale(pokertable_image, (1280, 720))
 
 dropdown_menu = dropDownMenu(card_images_path, screen)
 selected_cards = []  # List to hold selected cards and their positions
+s_cards = []
 
 def convert_to_card(card_string):
     # Split the input string assuming the format "Rank of Suit" with spaces
@@ -36,7 +38,7 @@ def convert_to_card(card_string):
         'Jack': 10, 'Queen': 11, 'King': 12, 'Ace': 13
     }
     suit_to_color = {
-        'Clubs': 1, 'Diamonds': 2, 'Hearts': 3, 'Spades': 4
+        'clubs': 1, 'diamonds': 2, 'hearts': 3, 'spades': 4
     }
 
     # Convert rank and suit to count and color, checking if they exist in the dictionary
@@ -68,7 +70,7 @@ while running:
     if selected_card:
         # Add the selected card and its position to the list
         selected_cards.append((selected_card_image, selected_card))
-
+        s_cards.append(selected_card)
         # Reset the selected card in the drop-down menu
         dropdown_menu.selected_card = None
 
@@ -79,10 +81,11 @@ while running:
 
         resized_card_image = pygame.transform.scale(card_image, (50, 80))
         screen.blit(resized_card_image, card_position)
-    if len(selected_cards)==10:
-        cards = convert_strings_to_cards([selected_cards])
+    if len(selected_cards)==10 & convert==True:
+        cards = convert_strings_to_cards(s_cards)
         for card in cards:
             print(f"Card: Count = {card.count}, Color = {card.color}")
+        convert=False
     # Check if all cards are selected
     runFlop = True
     if len(selected_cards) == 10 & runFlop == True:
