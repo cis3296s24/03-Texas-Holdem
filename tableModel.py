@@ -63,6 +63,7 @@ if len(selected_cards) == 10:
 
 font = pygame.font.Font(None, 24)  # Font for the text
 
+
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -91,6 +92,7 @@ while running:
 
         resized_card_image = pygame.transform.scale(card_image, (50, 80))
         screen.blit(resized_card_image, card_position)
+
         if i == 7:
             win_rate_text = font.render("Win Rate", True, (255, 255, 255))  # White text
             screen.blit(win_rate_text, (780, 490))
@@ -103,8 +105,8 @@ while running:
             #winRatePosition = ((card_position[0] + 50, card_position[1]), (card_position[0] + 50, card_position[1]), (card_position[0] + 50, card_position[1]), (card_position[0] + 50, card_position[1]), (card_position[0] + 50, card_position[1]))
             win_rate_text = font.render("Win Rate", True, (255, 255, 255))  # White text
             screen.blit(win_rate_text, (card_position[0] + 50, card_position[1]))
-            
-    if len(selected_cards) == 10 and convert == True:
+
+    if len(selected_cards)==10 & convert==True:
         cards = convert_strings_to_cards(s_cards)
         for card in cards:
             print(f"Card: Count = {card.count}, Color = {card.color}")
