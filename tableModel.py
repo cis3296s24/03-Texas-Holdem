@@ -1,11 +1,13 @@
 import pygame
 from dropDown import dropDownMenu
 from pygame.locals import *
+import random
+
 
 
 # Pygame setup
 pygame.init()
-screen = pygame.display.set_mode((1280, 720))
+screen = pygame.display.set_mode((1080, 720))
 clock = pygame.time.Clock()
 running = True
 
@@ -19,44 +21,39 @@ pokertable_image = pygame.image.load("pokertable.png")
 pokertable_image = pygame.transform.scale(pokertable_image, (1280, 720))
 
 dropdown_menu = dropDownMenu(card_images_path, screen)
+selected_cards = []  # List to hold selected cards and their positions
 
 while running:
-    # Poll for events
-    # pygame.QUIT event means the user clicked X to close your window
-
-    
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            print("yes")
             running = False
         else:
             dropdown_menu.handle_events(event)
 
-    # Display the loaded image
-    screen.blit(pokertable_image, (0, 0))
+    screen.blit(pokertable_image, (-100, 0))
     dropdown_menu.draw()
 
-    # Flip() the display to put your work on screen
-
+    # Check if a card is selected
     selected_card = dropdown_menu.get_selected_card()
     selected_card_image = dropdown_menu.get_selected_card_image()
 
     if selected_card:
-        positionValues = ((500,150), (550,150))
-        cordX = 500
-        cordY = 150
-        font = pygame.font.Font(None,36)
-        #text_surface = font.render(f"Selected Card: {selected_card}", True, (0,0,0))
-        #screen.blit(text_surface, (300,200))
-        resized_card_image = pygame.transform.scale(selected_card_image, (60, 90))  # Resize the image
-        screen.blit(resized_card_image, (cordX, cordY))  # Blit the resized image to the screen
-        #screen.blit(selected_card, selected_card.get_rect())
+        # Add the selected card and its position to the list
+        selected_cards.append((selected_card_image, selected_card))
+
+        # Reset the selected card in the drop-down menu
+        dropdown_menu.selected_card = None
+
+    # Display selected cards on the screen
+    
+    for i, (card_image, card_name) in enumerate(selected_cards):
+        positionValues = ((300,150), (350,150), (675,150), (725,150), (840,320), (890,320), (725,490), (675,490), (350,490), (300,490))        #level of next 5 cards is 320
+        card_position = positionValues[i]  
+
+        resized_card_image = pygame.transform.scale(card_image, (50, 80))
+        screen.blit(resized_card_image, card_position)
 
     pygame.display.flip()
-    clock.tick(60)  # Limits FPS to 60
+    clock.tick(60)
 
 pygame.quit()
-
-
-
-
