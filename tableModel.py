@@ -13,7 +13,7 @@ convert = True
 
 pygame.display.set_caption("Texas Hold em Odds Calculator")
 
-card_images_path = "/Users/vincentschetroma/Desktop/03-Texas-Holdem/PlayingCards/PNG-cards-1.3/"
+card_images_path = "/Users/joeyz/IdeaProjects/03-Texas-Holdem/PlayingCards/PNG-cards-1.3/"
 # Load the image
 pokertable_image = pygame.image.load("pokertable.png")
 
@@ -38,7 +38,7 @@ def convert_to_card(card_string):
         'Jack': 10, 'Queen': 11, 'King': 12, 'Ace': 13
     }
     suit_to_color = {
-        'clubs': 1, 'diamonds': 2, 'hearts': 3, 'spades': 4
+        'Clubs': 1, 'Diamonds': 2, 'Hearts': 3, 'Spades': 4
     }
 
     # Convert rank and suit to count and color, checking if they exist in the dictionary
@@ -81,14 +81,15 @@ while running:
 
         resized_card_image = pygame.transform.scale(card_image, (50, 80))
         screen.blit(resized_card_image, card_position)
-    if len(selected_cards)==10 & convert==True:
+    if len(selected_cards)==10 and convert==True:
+        print(s_cards)
         cards = convert_strings_to_cards(s_cards)
         for card in cards:
             print(f"Card: Count = {card.count}, Color = {card.color}")
         convert=False
     # Check if all cards are selected
     runFlop = True
-    if len(selected_cards) == 10 & runFlop == True:
+    if len(selected_cards) == 10 and runFlop == True:
         # Generate and display 5 random cards in the middle of the table
         random_cards = dropDownMenu.get_random_cards([card[1] for card in selected_cards], dropdown_menu.card_options)
         for i, card_name in enumerate(random_cards):
@@ -102,3 +103,4 @@ while running:
     clock.tick(60)
 
 pygame.quit()
+
