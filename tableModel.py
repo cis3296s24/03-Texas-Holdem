@@ -2,6 +2,7 @@ import pygame
 from dropDown import dropDownMenu
 from pygame.locals import *
 import random
+import card
 
 # Pygame setup
 pygame.init()
@@ -20,6 +21,35 @@ pokertable_image = pygame.transform.scale(pokertable_image, (1280, 720))
 
 dropdown_menu = dropDownMenu(card_images_path, screen)
 selected_cards = []  # List to hold selected cards and their positions
+
+def convert_to_card(card_string):
+    # Split the input string assuming the format "Rank of Suit" with spaces
+    parts = card_string.split('_of_')
+    if len(parts) != 2:
+        raise ValueError(f"Invalid card format: '{card_string}'. Expected format is 'Rank of Suit'.")
+
+    rank, suit = parts  # Unpack the parts directly into rank and suit
+
+    # Define mappings for count and color
+    rank_to_count = {
+        '2': 1, '3': 2, '4': 3, '5': 4, '6': 5, '7': 6, '8': 7, '9': 8, '10': 9,
+        'Jack': 10, 'Queen': 11, 'King': 12, 'Ace': 13
+    }
+    suit_to_color = {
+        'Clubs': 1, 'Diamonds': 2, 'Hearts': 3, 'Spades': 4
+    }
+
+    # Convert rank and suit to count and color, checking if they exist in the dictionary
+    try:
+        count = rank_to_count[rank]
+        color = suit_to_color[suit.capitalize()]  # Capitalize to match key names
+    except KeyError:
+        raise ValueError(f"Unknown rank or suit in card: '{card_string}'.")
+
+    # Create a new Card instance
+    return card.Card(count, color)
+def convert_strings_to_cards(card_strings):
+    return [convert_to_card(card_string) for card_string in card_strings]
 
 while running:
     for event in pygame.event.get():
@@ -49,7 +79,10 @@ while running:
 
         resized_card_image = pygame.transform.scale(card_image, (50, 80))
         screen.blit(resized_card_image, card_position)
-
+    if len(selected_cards)==10:
+        cards = convert_strings_to_cards([selected_cards])
+        for card in cards:
+            print(f"Card: Count = {card.count}, Color = {card.color}")
     # Check if all cards are selected
     runFlop = True
     if len(selected_cards) == 10 & runFlop == True:
