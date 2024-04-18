@@ -3,8 +3,6 @@ from dropDown import dropDownMenu
 from pygame.locals import *
 import random
 
-
-
 # Pygame setup
 pygame.init()
 screen = pygame.display.set_mode((1080, 720))
@@ -45,13 +43,24 @@ while running:
         dropdown_menu.selected_card = None
 
     # Display selected cards on the screen
-    
     for i, (card_image, card_name) in enumerate(selected_cards):
-        positionValues = ((300,150), (350,150), (675,150), (725,150), (840,320), (890,320), (725,490), (675,490), (350,490), (300,490))        #level of next 5 cards is 320
+        positionValues = ((300,150), (350,150), (675,150), (725,150), (840,320), (890,320), (725,490), (675,490), (350,490), (300,490))        #positions for cards
         card_position = positionValues[i]  
 
         resized_card_image = pygame.transform.scale(card_image, (50, 80))
         screen.blit(resized_card_image, card_position)
+
+    # Check if all cards are selected
+    runFlop = True
+    if len(selected_cards) == 10 & runFlop == True:
+        # Generate and display 5 random cards in the middle of the table
+        random_cards = dropDownMenu.get_random_cards([card[1] for card in selected_cards], dropdown_menu.card_options)
+        for i, card_name in enumerate(random_cards):
+            card_image = dropdown_menu.card_images[card_name]
+            card_position = (540 - 125 + i * 50, 320)  # Adjusted position for 5 cards
+            resized_card_image = pygame.transform.scale(card_image, (50, 80))
+            screen.blit(resized_card_image, card_position)
+    runFlop == False
 
     pygame.display.flip()
     clock.tick(60)
