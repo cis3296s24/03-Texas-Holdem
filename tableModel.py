@@ -27,6 +27,8 @@ random_cards = []  # List to hold random cards
 if len(selected_cards) == 10:
     random_cards = dropDownMenu.get_random_cards([card[1] for card in selected_cards], dropdown_menu.card_options)
 
+font = pygame.font.Font(None, 24)  # Font for the text
+
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -56,6 +58,20 @@ while running:
         resized_card_image = pygame.transform.scale(card_image, (50, 80))
         screen.blit(resized_card_image, card_position)
 
+
+        if i == 7:
+            win_rate_text = font.render("Win Rate", True, (255, 255, 255))  # White text
+            screen.blit(win_rate_text, (780, 480))
+
+        if i == 9:
+            win_rate_text = font.render("Win Rate", True, (255, 255, 255))  # White text
+            screen.blit(win_rate_text, (350, 500))
+        if ((i % 2) != 0 and (i != 7) and (i != 9)):  # Display win rate text next to the hand
+            #winRatePosition = ((card_position[0] + 50, card_position[1]), (card_position[0] + 50, card_position[1]), (card_position[0] + 50, card_position[1]), (card_position[0] + 50, card_position[1]), (card_position[0] + 50, card_position[1]))
+            win_rate_text = font.render("Win Rate", True, (255, 255, 255))  # White text
+            screen.blit(win_rate_text, (card_position[0] + 50, card_position[1]))
+
+
     # Check if all cards are selected
     if len(selected_cards) == 10 and not random_cards:
         # Generate and display 5 random cards in the middle of the table
@@ -70,4 +86,5 @@ while running:
     clock.tick(60)
 
 pygame.quit()
+
 
