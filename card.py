@@ -1,4 +1,5 @@
 import unittest
+
 import numpy as np
 
 
@@ -28,6 +29,7 @@ class Card:
         if not 1 <= value <= 4:
             raise ValueError("Color must be between 1 and 4.")
         self._color = value
+
 
     def __repr__(self):
         return f"Card(count={self.count}, color={self.color})"
@@ -202,31 +204,29 @@ def input_card():
     suit = int(input("Enter card suit (1=Hearts, 2=Clubs, 3=Diamonds, 4=Spades): "))
     return Card(rank, suit)
 
-def simulate_poker_games(num_simulations=10000):
-    num_players = int(input("Enter the number of players (1-5): "))
-    num_players = min(max(num_players, 1), 5)
+def simulate_poker_games(card_objects):
+    #num_players = int(input("Enter the number of players (1-5): "))
+    #num_players = min(max(num_players, 1), 5)
+    num_players=5
     player_wins = [0] * num_players
-    players_hands = []
-    for i in range(num_players):
-        print(f"Define Player {i+1}'s hand:")
-        players_hands.append([input_card() for _ in range(2)])
+    players_hands = [card_objects[i*2:(i+1)*2] for i in range(num_players)]
+    #for i in range(num_players):
+        #print(f"Define Player {i+1}'s hand:")
+        #players_hands.append([input_card() for _ in range(2)])
 
 
-    for _ in range(num_simulations):
+    for _ in range(10000):
         deck = create_deck()
         flat_player_hands = [card for sublist in players_hands for card in sublist]
         # Remove the specific cards for Player 1 and Player 2 from the deck
-        deck = [card for card in deck if card not in flat_player_hands]
+        deck = [card for card in deck if card not in card_objects]
 
         # Shuffle the remaining deck
         random.shuffle(deck)
 
         # Assign specific hands to Player 1 and Player 2
-
-
         # Assuming the next five cards are community cards
         community_cards = deck[:5]
-
         # Evaluate hands (assuming Ranker.rank_all_hands and related evaluation logic is properly defined)
 
         player_hands_with_community = [hand + community_cards for hand in players_hands]
@@ -238,11 +238,8 @@ def simulate_poker_games(num_simulations=10000):
         for i in range(num_players):
             if winners[i]:
                 player_wins[i] += 1
-
-
-
     # Calculate and return win rates and tie rate
-    win_rates = [wins / num_simulations for wins in player_wins]
+    win_rates = [wins / 10000 for wins in player_wins]
     return win_rates
 
 
@@ -263,8 +260,45 @@ if __name__ == '__main__':
         return deck[:num_cards], deck[num_cards:num_cards*2]
 
 
-    win_rates = simulate_poker_games()
+    def convert_to_card(card_string):
+        # Split the input string assuming the format "Rank of Suit" with spaces
+        parts = card_string.split('_of_')
+        if len(parts) != 2:
+            raise ValueError(f"Invalid card format: '{card_string}'. Expected format is 'Rank of Suit'.")
+
+        rank, suit = parts  # Unpack the parts directly into rank and suit
+
+        # Define mappings for count and color
+        rank_to_count = {
+            '2': 1, '3': 2, '4': 3, '5': 4, '6': 5, '7': 6, '8': 7, '9': 8, '10': 9,
+            'Jack': 10, 'Queen': 11, 'King': 12, 'Ace': 13
+        }
+        suit_to_color = {
+            'Clubs': 1, 'Diamonds': 2, 'Hearts': 3, 'Spades': 4
+        }
+
+        # Convert rank and suit to count and color, checking if they exist in the dictionary
+        try:
+            count = rank_to_count[rank]
+            color = suit_to_color[suit.capitalize()]  # Capitalize to match key names
+        except KeyError:
+            raise ValueError(f"Unknown rank or suit in card: '{card_string}'.")
+
+        # Create a new Card instance
+        return Card(count, color)
+    def convert_strings_to_cards(card_strings):
+        return [convert_to_card(card_string) for card_string in card_strings]
+
+
+    cards = convert_strings_to_cards([
+        "Ace_of_Spades", "Ace_of_Hearts",
+        "King_of_Spades", "King_of_Hearts",
+        "Queen_of_Spades", "Queen_of_Hearts",
+        "Jack_of_Spades", "Jack_of_Hearts",
+        "10_of_Spades", "10_of_Hearts"
+    ])
+
+    win_rates = simulate_poker_games(cards)
     for i, rate in enumerate(win_rates):
         print(f"Player {i+1} Win Rate: {rate*100:.2f}%")
-
 
