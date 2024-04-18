@@ -21,6 +21,12 @@ pokertable_image = pygame.transform.scale(pokertable_image, (1280, 720))
 dropdown_menu = dropDownMenu(card_images_path, screen)
 selected_cards = []  # List to hold selected cards and their positions
 
+random_cards = []  # List to hold random cards
+
+# Generate and store 5 random cards
+if len(selected_cards) == 10:
+    random_cards = dropDownMenu.get_random_cards([card[1] for card in selected_cards], dropdown_menu.card_options)
+
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -51,8 +57,7 @@ while running:
         screen.blit(resized_card_image, card_position)
 
     # Check if all cards are selected
-    runFlop = True
-    if len(selected_cards) == 10 & runFlop == True:
+    if len(selected_cards) == 10 and not random_cards:
         # Generate and display 5 random cards in the middle of the table
         random_cards = dropDownMenu.get_random_cards([card[1] for card in selected_cards], dropdown_menu.card_options)
         for i, card_name in enumerate(random_cards):
@@ -60,9 +65,9 @@ while running:
             card_position = (540 - 125 + i * 50, 320)  # Adjusted position for 5 cards
             resized_card_image = pygame.transform.scale(card_image, (50, 80))
             screen.blit(resized_card_image, card_position)
-    runFlop == False
 
     pygame.display.flip()
     clock.tick(60)
 
 pygame.quit()
+
