@@ -309,4 +309,3 @@ if __name__ == '__main__':
     for i, rate in enumerate(win_rates):
         print(f"Player {i+1} Win Rate: {rate*100:.2f}%")
 
-
