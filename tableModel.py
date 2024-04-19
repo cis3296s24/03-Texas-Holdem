@@ -14,7 +14,7 @@ convert = True
 
 pygame.display.set_caption("Texas Hold em Odds Calculator")
 
-card_images_path = "/Users/joeyz/IdeaProjects/03-Texas-Holdem/PlayingCards/PNG-cards-1.3/"
+card_images_path = "/Users/vincentschetroma/Desktop/03-Texas-Holdem/PlayingCards/PNG-cards-1.3/"
 # Load the image
 pokertable_image = pygame.image.load("pokertable.png")
 
@@ -95,25 +95,26 @@ while running:
 
         if i == 7:
             win_rate_text = font.render("Win Rate", True, (255, 255, 255))  # White text
-            screen.blit(win_rate_text, (780, 490))
+            screen.blit(win_rate_text, (775, 490))
 
         if i == 9:
             win_rate_text = font.render("Win Rate", True, (255, 255, 255))  # White text
-            screen.blit(win_rate_text, (400, 500))
+            screen.blit(win_rate_text, (400, 490))
 
         if ((i % 2) != 0 and (i != 7) and (i != 9)):  # Display win rate text next to the hand
             #winRatePosition = ((card_position[0] + 50, card_position[1]), (card_position[0] + 50, card_position[1]), (card_position[0] + 50, card_position[1]), (card_position[0] + 50, card_position[1]), (card_position[0] + 50, card_position[1]))
             win_rate_text = font.render("Win Rate", True, (255, 255, 255)) # White text
             screen.blit(win_rate_text, (card_position[0] + 50, card_position[1]))
 
-    if len(selected_cards)==10 and convert==True:
+    if len(selected_cards) == 10 and convert == True:
         cards = convert_strings_to_cards(s_cards)
-        win_rates=card.simulate_poker_games(cards)
+        win_rates = card.simulate_poker_games(cards)
     # Check if all cards are selected
     runFlop = True
 
 
     if len(selected_cards) == 10:
+        winRatePositions = ((400,165), (775,165), (940,335), (775,505), (400,505))
         for i in range(5):  # Assuming there are 5 players
             player_hand_index = i * 2 + 1  # The index of the second card of each player
             card_position = positionValues[player_hand_index]
@@ -122,7 +123,8 @@ while running:
             else:
                 win_rate_text = font.render("Calculating...", True, (255, 255, 255))  # Before win rates are calculated
             win_rate_position = (card_position[0] +130, card_position[1]+50)
-            screen.blit(win_rate_text, win_rate_position)
+            #screen.blit(win_rate_text, win_rate_position)
+            screen.blit(win_rate_text, winRatePositions[i])
 
 
 
