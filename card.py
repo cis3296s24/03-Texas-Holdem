@@ -242,6 +242,13 @@ def simulate_poker_games(card_objects):
     win_rates = [wins / 10000 for wins in player_wins]
     return win_rates
 
+def create_deck():
+        return [Card(count, color) for color in range(1, 5) for count in range(1, 14)]
+
+# Deal hands to two players
+def deal_hands(deck, num_cards=5):
+    return deck[:num_cards], deck[num_cards:num_cards*2]
+
 
 
 

@@ -13,7 +13,7 @@ class Hand:
         #self.handFour = []
         #self.handFive = []
         self.hand_limit = hand_limit
-        self.card_arr = np.zeros(shape=(0, hand_limit), dtype=np.int)
+        self.card_arr = np.zeros(shape=(0, hand_limit), dtype=np.int32)
 
     def add_cards(self, cards):
 
