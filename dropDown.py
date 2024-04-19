@@ -1,4 +1,6 @@
 import pygame
+import random
+
 
 from pygame.locals import *
 
@@ -91,4 +93,11 @@ class dropDownMenu:
 
 
     def get_selected_card_image(self):
-        return self.card_images.get(self.selected_card)     #gets image from card_images array d
+        return self.card_images.get(self.selected_card)     #gets image from card_images array
+
+    def get_random_cards(selected_cards, card_options):
+        # Filter out selected cards from the card options
+        available_cards = [card for card in card_options if card not in selected_cards]
+        # Select 5 random cards from the available cards
+        random_cards = random.sample(available_cards, 5)
+        return random_cards
