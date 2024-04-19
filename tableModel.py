@@ -14,7 +14,7 @@ convert = True
 
 pygame.display.set_caption("Texas Hold em Odds Calculator")
 
-card_images_path = "/Users/vincentschetroma/Desktop/03-Texas-Holdem/PlayingCards/PNG-cards-1.3/"
+card_images_path = "/Users/joeyz/IdeaProjects/03-Texas-Holdem/PlayingCards/PNG-cards-1.3/"
 # Load the image
 pokertable_image = pygame.image.load("pokertable.png")
 
@@ -39,7 +39,7 @@ def convert_to_card(card_string):
         'Jack': 10, 'Queen': 11, 'King': 12, 'Ace': 13
     }
     suit_to_color = {
-        'clubs': 1, 'diamonds': 2, 'hearts': 3, 'spades': 4
+        'Clubs': 1, 'Diamonds': 2, 'Hearts': 3, 'Spades': 4
     }
 
     # Convert rank and suit to count and color, checking if they exist in the dictionary
@@ -103,16 +103,28 @@ while running:
 
         if ((i % 2) != 0 and (i != 7) and (i != 9)):  # Display win rate text next to the hand
             #winRatePosition = ((card_position[0] + 50, card_position[1]), (card_position[0] + 50, card_position[1]), (card_position[0] + 50, card_position[1]), (card_position[0] + 50, card_position[1]), (card_position[0] + 50, card_position[1]))
-            win_rate_text = font.render("Win Rate", True, (255, 255, 255))  # White text
+            win_rate_text = font.render("Win Rate", True, (255, 255, 255)) # White text
             screen.blit(win_rate_text, (card_position[0] + 50, card_position[1]))
 
-    if len(selected_cards)==10 & convert==True:
+    if len(selected_cards)==10 and convert==True:
         cards = convert_strings_to_cards(s_cards)
-        for card in cards:
-            print(f"Card: Count = {card.count}, Color = {card.color}")
-        convert=False
+        win_rates=card.simulate_poker_games(cards)
     # Check if all cards are selected
     runFlop = True
+
+
+    if len(selected_cards) == 10:
+        for i in range(5):  # Assuming there are 5 players
+            player_hand_index = i * 2 + 1  # The index of the second card of each player
+            card_position = positionValues[player_hand_index]
+            if win_rates:  # Ensure win_rates have been calculated
+                win_rate_text = font.render(f"{win_rates[i] * 100:.2f}%", True, (255, 255, 255))  # White text
+            else:
+                win_rate_text = font.render("Calculating...", True, (255, 255, 255))  # Before win rates are calculated
+            win_rate_position = (card_position[0] +130, card_position[1]+50)
+            screen.blit(win_rate_text, win_rate_position)
+
+
 
     if len(selected_cards) == 10 and runFlop == True:
         # Generate and display 5 random cards in the middle of the table
