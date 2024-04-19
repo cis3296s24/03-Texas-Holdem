@@ -27,18 +27,29 @@ font2 = pygame.font.Font(None, 36)
 options = ['1', '2', '3', '4', '5']
 selected_option_index = 0
 
+# Calculate the center of the window
+window_center_x = window_width // 2
+window_center_y = window_height // 2
+
+# Dropdown properties
+dropdown_width = 100
+dropdown_height = 50
+dropdown_rect = pygame.Rect(window_center_x - dropdown_width // 2, window_center_y - dropdown_height // 2, dropdown_width, dropdown_height)
+dropdown_open = False
+
 # Button properties
 button_width = 50
 button_height = 50
-window_center_x = window_width // 2
-window_center_y = window_height // 2
-button_rect_left = pygame.Rect(window_center_x - 100, window_center_y + 50, button_width, button_height)
-button_rect_right = pygame.Rect(window_center_x + 50, window_center_y + 50, button_width, button_height)
+button_rect_left = pygame.Rect(window_center_x - 150, window_center_y - button_height // 2, button_width, button_height)
+button_rect_right = pygame.Rect(window_center_x + 100, window_center_y - button_height // 2, button_width, button_height)
 
 # Start button properties
 start_button_width = 150
 start_button_height = 50
-start_button_rect = pygame.Rect(window_center_x - start_button_width // 2, window_center_y + 150, start_button_width, start_button_height)
+start_button_rect = pygame.Rect(window_center_x - start_button_width // 2, window_center_y + 100, start_button_width, start_button_height)
+
+# Variable to store number of players
+num_players = 1
 
 # Main loop
 running = True
@@ -55,26 +66,24 @@ while running:
                 # If the right arrow is clicked, increment the selected index
                 selected_option_index = (selected_option_index + 1) % len(options)
             elif start_button_rect.collidepoint(event.pos):
-                # If the start button is clicked, open "tableModel.py" using subprocess
-                subprocess.Popen(["python", "tableModel.py"])
+                # If the start button is clicked, store the number of players and open "tableModel.py" using subprocess
+                num_players = int(options[selected_option_index])
+                subprocess.Popen(["python", "table.py", str(num_players)])
 
     # Draw the background image
     window.blit(background_image, (0, 0))
 
     # Draw the "Title" label centered
     text_surface = font1.render("Texas Hold'em", True, BLACK)
-    text_rect = text_surface.get_rect(center=(window_center_x, window_center_y - 50))
+    text_rect = text_surface.get_rect(center=(window_center_x, window_center_y - 100))
     window.blit(text_surface, text_rect)
 
     # Draw the "players" label centered
     text_surface = font2.render("# of computer players", True, BLACK)
-    text_rect = text_surface.get_rect(center=(window_center_x, window_center_y))
+    text_rect = text_surface.get_rect(center=(window_center_x, window_center_y - 50))
     window.blit(text_surface, text_rect)
 
     # Draw the dropdown button
-    dropdown_width = 100
-    dropdown_height = 50
-    dropdown_rect = pygame.Rect(window_center_x - dropdown_width // 2, window_center_y + 50, dropdown_width, dropdown_height)
     pygame.draw.rect(window, GRAY, dropdown_rect)
     pygame.draw.rect(window, BLACK, dropdown_rect, 2)
     text_surface = font2.render(options[selected_option_index], True, BLACK)
