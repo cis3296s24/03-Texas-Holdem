@@ -216,7 +216,7 @@ def simulate_poker_games(card_objects):
 
 
     for _ in range(10000):
-        deck = create_deck()
+        deck = [Card(count, color) for color in range(1, 5) for count in range(1, 14)]
         flat_player_hands = [card for sublist in players_hands for card in sublist]
         # Remove the specific cards for Player 1 and Player 2 from the deck
         deck = [card for card in deck if card not in card_objects]
