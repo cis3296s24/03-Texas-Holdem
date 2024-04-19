@@ -1,3 +1,4 @@
+
 import pygame
 from dropDown import dropDownMenu
 from pygame.locals import *
@@ -53,6 +54,16 @@ def convert_to_card(card_string):
 def convert_strings_to_cards(card_strings):
     return [convert_to_card(card_string) for card_string in card_strings]
 
+
+
+
+# Generate and store 5 random cards
+if len(selected_cards) == 10:
+    random_cards = dropDownMenu.get_random_cards([card[1] for card in selected_cards], dropdown_menu.card_options)
+
+font = pygame.font.Font(None, 24)  # Font for the text
+
+
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -81,6 +92,20 @@ while running:
 
         resized_card_image = pygame.transform.scale(card_image, (50, 80))
         screen.blit(resized_card_image, card_position)
+
+        if i == 7:
+            win_rate_text = font.render("Win Rate", True, (255, 255, 255))  # White text
+            screen.blit(win_rate_text, (780, 490))
+
+        if i == 9:
+            win_rate_text = font.render("Win Rate", True, (255, 255, 255))  # White text
+            screen.blit(win_rate_text, (400, 500))
+
+        if ((i % 2) != 0 and (i != 7) and (i != 9)):  # Display win rate text next to the hand
+            #winRatePosition = ((card_position[0] + 50, card_position[1]), (card_position[0] + 50, card_position[1]), (card_position[0] + 50, card_position[1]), (card_position[0] + 50, card_position[1]), (card_position[0] + 50, card_position[1]))
+            win_rate_text = font.render("Win Rate", True, (255, 255, 255))  # White text
+            screen.blit(win_rate_text, (card_position[0] + 50, card_position[1]))
+
     if len(selected_cards)==10 & convert==True:
         cards = convert_strings_to_cards(s_cards)
         for card in cards:
@@ -88,7 +113,8 @@ while running:
         convert=False
     # Check if all cards are selected
     runFlop = True
-    if len(selected_cards) == 10 & runFlop == True:
+
+    if len(selected_cards) == 10 and runFlop == True:
         # Generate and display 5 random cards in the middle of the table
         random_cards = dropDownMenu.get_random_cards([card[1] for card in selected_cards], dropdown_menu.card_options)
         for i, card_name in enumerate(random_cards):
@@ -96,7 +122,7 @@ while running:
             card_position = (540 - 125 + i * 50, 320)  # Adjusted position for 5 cards
             resized_card_image = pygame.transform.scale(card_image, (50, 80))
             screen.blit(resized_card_image, card_position)
-    runFlop == False
+
 
     pygame.display.flip()
     clock.tick(60)
