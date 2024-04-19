@@ -3,6 +3,7 @@ from dropDown import dropDownMenu
 from pygame.locals import *
 import random
 import card
+import ranker
 
 # Pygame setup
 pygame.init()
@@ -82,10 +83,13 @@ while running:
         resized_card_image = pygame.transform.scale(card_image, (50, 80))
         screen.blit(resized_card_image, card_position)
     if len(selected_cards)==10 and convert==True:
-        print(s_cards)
+        #print(s_cards)
         cards = convert_strings_to_cards(s_cards)
-        for card in cards:
-            print(f"Card: Count = {card.count}, Color = {card.color}")
+        #for card in cards:
+            #print(f"Card: Count = {card.count}, Color = {card.color}")
+        win_rates = card.simulate_poker_games(cards)
+        for i, rate in enumerate(win_rates):
+            print(f"Player {i+1} Win Rate: {rate*100:.2f}%")
         convert=False
     # Check if all cards are selected
     runFlop = True
