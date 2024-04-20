@@ -216,7 +216,7 @@ def simulate_poker_games(card_objects):
 
 
     for _ in range(10000):
-        deck = create_deck()
+        deck = [Card(count, color) for color in range(1, 5) for count in range(1, 14)]
         flat_player_hands = [card for sublist in players_hands for card in sublist]
         # Remove the specific cards for Player 1 and Player 2 from the deck
         deck = [card for card in deck if card not in card_objects]
@@ -241,6 +241,13 @@ def simulate_poker_games(card_objects):
     # Calculate and return win rates and tie rate
     win_rates = [wins / 10000 for wins in player_wins]
     return win_rates
+
+def create_deck():
+        return [Card(count, color) for color in range(1, 5) for count in range(1, 14)]
+
+# Deal hands to two players
+def deal_hands(deck, num_cards=5):
+    return deck[:num_cards], deck[num_cards:num_cards*2]
 
 
 
@@ -301,5 +308,4 @@ if __name__ == '__main__':
     win_rates = simulate_poker_games(cards)
     for i, rate in enumerate(win_rates):
         print(f"Player {i+1} Win Rate: {rate*100:.2f}%")
-
 
