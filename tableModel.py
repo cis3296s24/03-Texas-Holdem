@@ -1,7 +1,7 @@
 
 import pygame
+import sys
 from dropDown import dropDownMenu
-from pygame.locals import *
 import random
 import card
 
@@ -14,7 +14,7 @@ convert = True
 
 pygame.display.set_caption("Texas Hold em Odds Calculator")
 
-card_images_path = "/Users/vincentschetroma/Desktop/03-Texas-Holdem/PlayingCards/PNG-cards-1.3/"
+card_images_path = "PlayingCards/PNG-cards-1.3/"
 # Load the image
 pokertable_image = pygame.image.load("pokertable.png")
 
@@ -51,10 +51,14 @@ def convert_to_card(card_string):
 
     # Create a new Card instance
     return card.Card(count, color)
+
 def convert_strings_to_cards(card_strings):
     return [convert_to_card(card_string) for card_string in card_strings]
 
 
+if __name__ == "__main__":
+    num_players = int(sys.argv[1])
+    print(f"num_players tablemodel: {num_players}")
 
 
 # Generate and store 5 random cards
@@ -142,3 +146,4 @@ while running:
     clock.tick(60)
 
 pygame.quit()
+

@@ -25,7 +25,7 @@ tar -xzf
 - The poker table will appear and is ready to be used.
 
 # How to contribute
-Follow this project board to know the latest status of the project: [http://...]([http://...])  
+Follow this project board to know the latest status of the project: [https://github.com/orgs/cis3296s24/projects/86/views/1]([https://github.com/orgs/cis3296s24/projects/86/views/1])  
 
 ### How to build
 - Clone this git repository into VSCode
