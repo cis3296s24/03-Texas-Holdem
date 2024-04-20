@@ -1,6 +1,6 @@
 import pygame
+import sys
 from dropDown import dropDownMenu
-from pygame.locals import *
 import random
 import card
 
@@ -13,7 +13,7 @@ convert = True
 
 pygame.display.set_caption("Texas Hold em Odds Calculator")
 
-card_images_path = "/Users/vincentschetroma/Desktop/03-Texas-Holdem/PlayingCards/PNG-cards-1.3/"
+card_images_path = "PlayingCards/PNG-cards-1.3/"
 # Load the image
 pokertable_image = pygame.image.load("pokertable.png")
 
@@ -50,55 +50,65 @@ def convert_to_card(card_string):
 
     # Create a new Card instance
     return card.Card(count, color)
+
 def convert_strings_to_cards(card_strings):
     return [convert_to_card(card_string) for card_string in card_strings]
 
-while running:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-        else:
-            dropdown_menu.handle_events(event)
+if __name__ == "__main__":
+    num_players = int(sys.argv[1])
+    print(f"num_players tablemodel: {num_players}")
 
-    screen.blit(pokertable_image, (-100, 0))
-    dropdown_menu.draw()
+# Main loop
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            else:
+                dropdown_menu.handle_events(event)
 
-    # Check if a card is selected
-    selected_card = dropdown_menu.get_selected_card()
-    selected_card_image = dropdown_menu.get_selected_card_image()
+        screen.blit(pokertable_image, (-100, 0))
+        dropdown_menu.draw()
 
-    if selected_card:
-        # Add the selected card and its position to the list
-        selected_cards.append((selected_card_image, selected_card))
-        s_cards.append(selected_card)
-        # Reset the selected card in the drop-down menu
-        dropdown_menu.selected_card = None
+        # Check if a card is selected
+        selected_card = dropdown_menu.get_selected_card()
+        selected_card_image = dropdown_menu.get_selected_card_image()
 
-    # Display selected cards on the screen
-    for i, (card_image, card_name) in enumerate(selected_cards):
-        positionValues = ((300,150), (350,150), (675,150), (725,150), (840,320), (890,320), (725,490), (675,490), (350,490), (300,490))        #positions for cards
-        card_position = positionValues[i]  
+        if selected_card:
+            # Add the selected card and its position to the list
+            selected_cards.append((selected_card_image, selected_card))
+            s_cards.append(selected_card)
+            # Reset the selected card in the drop-down menu
+            dropdown_menu.selected_card = None
 
-        resized_card_image = pygame.transform.scale(card_image, (50, 80))
-        screen.blit(resized_card_image, card_position)
-    if len(selected_cards)==10 & convert==True:
-        cards = convert_strings_to_cards(s_cards)
-        for card in cards:
-            print(f"Card: Count = {card.count}, Color = {card.color}")
-        convert=False
-    # Check if all cards are selected
-    runFlop = True
-    if len(selected_cards) == 10 & runFlop == True:
-        # Generate and display 5 random cards in the middle of the table
-        random_cards = dropDownMenu.get_random_cards([card[1] for card in selected_cards], dropdown_menu.card_options)
-        for i, card_name in enumerate(random_cards):
-            card_image = dropdown_menu.card_images[card_name]
-            card_position = (540 - 125 + i * 50, 320)  # Adjusted position for 5 cards
+        # Display selected cards on the screen
+        for i, (card_image, card_name) in enumerate(selected_cards):
+            positionValues = ((300,150), (350,150), (675,150), (725,150), (840,320), (890,320), (725,490), (675,490), (350,490), (300,490))        #positions for cards
+            card_position = positionValues[i]
+
             resized_card_image = pygame.transform.scale(card_image, (50, 80))
             screen.blit(resized_card_image, card_position)
-    runFlop == False
 
-    pygame.display.flip()
-    clock.tick(60)
+        if len(selected_cards) == 10 and convert == True:
+            cards = convert_strings_to_cards(s_cards)
+            for card in cards:
+                print(f"Card: Count = {card.count}, Color = {card.color}")
+            convert = False
 
-pygame.quit()
+        # Check if all cards are selected
+        runFlop = True
+        # if len(selected_cards) == 10 and runFlop == True:
+        if len(selected_cards) == 2 * num_players and runFlop:
+
+            # Generate and display 5 random cards in the middle of the table
+            random_cards = dropDownMenu.get_random_cards([card[1] for card in selected_cards], dropdown_menu.card_options)
+            for i, card_name in enumerate(random_cards):
+                card_image = dropdown_menu.card_images[card_name]
+                card_position = (540 - 125 + i * 50, 320)  # Adjusted position for 5 cards
+                resized_card_image = pygame.transform.scale(card_image, (50, 80))
+                screen.blit(resized_card_image, card_position)
+            runFlop = False
+
+        pygame.display.flip()
+        clock.tick(60)
+
+    pygame.quit()

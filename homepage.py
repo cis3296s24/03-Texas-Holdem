@@ -5,7 +5,7 @@ import subprocess
 pygame.init()
 
 # Set up window
-window_width = 1280
+window_width = 1080
 window_height = 720
 window = pygame.display.set_mode((window_width, window_height))
 pygame.display.set_caption("Texas Hold'em")
@@ -68,7 +68,8 @@ while running:
             elif start_button_rect.collidepoint(event.pos):
                 # If the start button is clicked, store the number of players and open "tableModel.py" using subprocess
                 num_players = int(options[selected_option_index])
-                subprocess.Popen(["python", "table.py", str(num_players)])
+                print("Number of players homepage:", num_players)
+                subprocess.Popen(["python", "tableModel.py", str(num_players)], stdin=subprocess.PIPE)
 
     # Draw the background image
     window.blit(background_image, (0, 0))
