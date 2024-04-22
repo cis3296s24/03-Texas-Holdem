@@ -28,32 +28,6 @@ def card_str_to_arr(card_str):
 def card_arr_to_str(card_arr):
     return [rev_num_dict[card[0]] + rev_suit_dict[card[1]] for card in card_arr]
 
-#
-# def add_card(card, card_arr):
-#     if type(card) == str:
-#         if len(card_arr) == 0:
-#             card_arr = card_str_to_arr([card])
-#         else:
-#             card_arr = np.concatenate([
-#                 card_arr,
-#                 card_str_to_arr([card])
-#             ], axis=0)
-#
-#     else:
-#         if len(card_arr) == 0:
-#             card_arr = np.array([card])
-#         else:
-#             card_arr = np.concatenate([
-#                 card_arr,
-#                 np.array([card])
-#             ], axis=0)
-#     return card_arr
-#
-# def remove_card(card, card_arr):
-#     if type(card) == str:
-#         return card_arr[~np.all(np.isin(card_arr, card_str_to_arr([card])), axis=1)]
-#     else:
-#         return card_arr[~np.all(np.isin(card_arr, np.array([card])), axis=1)]
 
 def remove_card(card, card_arr):
 

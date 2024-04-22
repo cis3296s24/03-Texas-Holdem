@@ -100,53 +100,5 @@ class TestPokerGameLogic(unittest.TestCase):
         winner = max(scores, key=scores.get)  # The player with the highest score wins
         self.assertNotEqual(winner, "Player 1", "Player 1 should win with a Royal Flush") 
 
-# class TestGameOutcome(unittest.TestCase):
-#     def setUp(self):
-#         # Setup basic cards for testing
-#         self.cards = {
-#             'royal_flush': [card.Card(10, 1), card.Card(11, 1), card.Card(12, 1), card.Card(13, 1), card.Card(1, 1)],
-#             'straight_flush': [card.Card(4, 2), card.Card(5, 2), card.Card(6, 2), card.Card(7, 2), card.Card(8, 2)],
-#             'four_of_a_kind': [card.Card(9, 3), card.Card(9, 2), card.Card(9, 4), card.Card(9, 1), card.Card(2, 3)],
-#             'full_house': [card.Card(4, 4), card.Card(4, 3), card.Card(4, 1), card.Card(3, 2), card.Card(3, 3)],
-#             'flush': [card.Card(2, 1), card.Card(4, 1), card.Card(6, 1), card.Card(9, 1), card.Card(11, 1)],
-#             'straight': [card.Card(3, 2), card.Card(4, 3), card.Card(5, 4), card.Card(6, 1), card.Card(7, 2)],
-#             'three_of_a_kind': [card.Card(12, 2), card.Card(12, 3), card.Card(12, 1), card.Card(5, 4), card.Card(8, 3)],
-#             'two_pair': [card.Card(10, 1), card.Card(10, 2), card.Card(3, 4), card.Card(3, 1), card.Card(7, 2)],
-#             'one_pair': [card.Card(8, 4), card.Card(8, 1), card.Card(4, 3), card.Card(9, 2), card.Card(2, 4)],
-#             'high_card': [card.Card(7, 3), card.Card(5, 4), card.Card(9, 2), card.Card(12, 1), card.Card(2, 3)]
-#         }
-
-    # def test_determine_winner_various_hands(self):
-    #     # Create a set of hands to compare
-    #     hands = {
-    #         'Alice': self.cards['royal_flush'],
-    #         'Bob': self.cards['straight_flush'],
-    #         'Charlie': self.cards['four_of_a_kind'],
-    #         'David': self.cards['full_house'],
-    #         'Eve': self.cards['flush']
-    #     }
-    #     results = Ranker.rank_all_hands(hands)
-    #     self.assertEqual(results, 'Alice', "Alice should win with a Royal Flush")
-
-
-# class TestHand(unittest.TestCase):
-#     def setUp(self):
-#         # Initialize a hand with a limit of 2 cards (common in Texas Hold'em)
-#         self.hand = Hand(hand_limit=2)
-
-#     def test_hand_evaluation(self):
-#         # Create sample cards for hand and community cards
-#         self.hand.card_arr = np.array([[card.Card(10, 1), card.Card(11, 1)]])  # Using Card objects directly
-#         community_arr = np.array([[card.Card(12, 1), card.Card(13, 1), card.Card(1, 1)]])  # Sample Royal Flush
-
-#         # Assuming Ranker.rank_all_hands expects a list of lists of Card objects and returns a list of tuples (rank, tie_breakers)
-#         # The highest rank for a Royal Flush might be coded as a specific number, say 10
-#         expected_rank = 10  # This should match whatever your Ranker logic returns for a Royal Flush
-#         Ranker.rank_all_hands = lambda hands, return_all: [(expected_rank, [])]  # Simplified direct assignment without using mock
-
-#         # Perform the test - assuming hand_evaluation computes based on provided community cards and returns a string
-#         evaluation = self.hand.hand_evaluation(community_arr)
-#         self.assertIn("Royal Flush", evaluation)  # Check if evaluation string includes the name of the hand type
-
 if __name__ == '__main__':
     unittest.main()

@@ -67,16 +67,35 @@ if len(selected_cards) == 10:
 
 font = pygame.font.Font(None, 24)  # Font for the text
 
+# Reset button properties
+reset_button_width = 150
+reset_button_height = 50
+reset_button_rect = pygame.Rect(50, 650, reset_button_width, reset_button_height)  # Positioned at the bottom left
+
 
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            if reset_button_rect.collidepoint(event.pos):
+                # Terminate Pygame and current script
+                pygame.quit()
+                sys.exit()  # Ensure the current script stops
+            else:
+                # Handle other mouse button events, such as those for the dropdown menu
+                dropdown_menu.handle_events(event)
         else:
+            # Handle non-mouse button events
             dropdown_menu.handle_events(event)
 
     screen.blit(pokertable_image, (-100, 0))
     dropdown_menu.draw()
+
+    pygame.draw.rect(screen, (255, 0, 0), reset_button_rect)  # Draw a red reset button
+    font = pygame.font.Font(None, 36)
+    text_surface = font.render("Reset", True, (255, 255, 255))
+    screen.blit(text_surface, (reset_button_rect.x + 20, reset_button_rect.y + 10))
 
     # Check if a card is selected
     selected_card = dropdown_menu.get_selected_card()
@@ -140,6 +159,7 @@ while running:
             card_position = (540 - 125 + i * 50, 320)  # Adjusted position for 5 cards
             resized_card_image = pygame.transform.scale(card_image, (50, 80))
             screen.blit(resized_card_image, card_position)
+
 
 
     pygame.display.flip()
