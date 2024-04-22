@@ -67,6 +67,9 @@ if len(selected_cards) == 10:
 
 font = pygame.font.Font(None, 24)  # Font for the text
 
+title_font = pygame.font.Font(None, 54)
+title_text = title_font.render("Texas Hold 'em Odds Calculator", True, (0,0,0))
+
 # Reset button properties
 reset_button_width = 150
 reset_button_height = 50
@@ -96,6 +99,9 @@ while running:
     font = pygame.font.Font(None, 36)
     text_surface = font.render("Reset", True, (255, 255, 255))
     screen.blit(text_surface, (reset_button_rect.x + 20, reset_button_rect.y + 10))
+
+    title_position = (260, 82)  
+    screen.blit(title_text, title_position)
 
     # Check if a card is selected
     selected_card = dropdown_menu.get_selected_card()

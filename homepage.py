@@ -69,13 +69,13 @@ while running:
                 # If the start button is clicked, store the number of players and open "tableModel.py" using subprocess
                 num_players = int(options[selected_option_index])
                 print("Number of players homepage:", num_players)
-                subprocess.Popen(["python", "tableModel.py", str(num_players)], stdin=subprocess.PIPE)
+                subprocess.Popen(["python3", "tableModel.py", str(num_players)], stdin=subprocess.PIPE)
 
     # Draw the background image
     window.blit(background_image, (0, 0))
 
     # Draw the "Title" label centered
-    text_surface = font1.render("Texas Hold'em", True, BLACK)
+    text_surface = font1.render("Texas Hold'em Odds Calculator", True, BLACK)
     text_rect = text_surface.get_rect(center=(window_center_x, window_center_y - 100))
     window.blit(text_surface, text_rect)
 
