@@ -2,7 +2,6 @@ import unittest
 from card import Ranker
 import card
 from card import create_deck, deal_hands
-from table import Table
 from hand import Hand
 import numpy as np
 

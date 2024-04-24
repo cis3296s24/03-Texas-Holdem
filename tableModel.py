@@ -11,6 +11,8 @@ screen = pygame.display.set_mode((1080, 720))
 clock = pygame.time.Clock()
 running = True
 convert = True
+num_players = int(sys.argv[1])
+runFlop= True
 
 pygame.display.set_caption("Texas Hold em Odds Calculator")
 
@@ -56,9 +58,7 @@ def convert_strings_to_cards(card_strings):
     return [convert_to_card(card_string) for card_string in card_strings]
 
 
-if __name__ == "__main__":
-    num_players = int(sys.argv[1])
-    print(f"num_players tablemodel: {num_players}")
+
 
 
 # Generate and store 5 random cards
@@ -129,29 +129,37 @@ while running:
             win_rate_text = font.render("Win Rate", True, (255, 255, 255)) # White text
             screen.blit(win_rate_text, (card_position[0] + 50, card_position[1]))
 
-    if len(selected_cards) == 10 and convert == True:
+    if len(selected_cards) == (num_players*2) and convert == True:
         cards = convert_strings_to_cards(s_cards)
-        win_rates = card.simulate_poker_games(cards)
+        win_rates = card.simulate_poker_games(cards,num_players)
     # Check if all cards are selected
-    runFlop = True
 
 
-    if len(selected_cards) == 10:
-        winRatePositions = ((400,165), (775,165), (940,335), (775,505), (400,505))
-        for i in range(5):  # Assuming there are 5 players
+
+    if len(selected_cards) == num_players*2:
+        winRatePositions = ((400, 165), (775, 165), (940, 335), (775, 505), (400, 505))
+        # Ensure you do not exceed the length of winRatePositions or win_rates
+        num_players = min(len(winRatePositions), len(win_rates))
+
+        for i in range(num_players):  # Loop through each player
             player_hand_index = i * 2 + 1  # The index of the second card of each player
             card_position = positionValues[player_hand_index]
+
             if win_rates:  # Ensure win_rates have been calculated
                 win_rate_text = font.render(f"{win_rates[i] * 100:.2f}%", True, (255, 255, 255))  # White text
             else:
                 win_rate_text = font.render("Calculating...", True, (255, 255, 255))  # Before win rates are calculated
-            win_rate_position = (card_position[0] +130, card_position[1]+50)
-            #screen.blit(win_rate_text, win_rate_position)
-            screen.blit(win_rate_text, winRatePositions[i])
+
+            # Set the win rate position based on predefined positions
+            win_rate_position = winRatePositions[i]
+
+            # Display the win rate text at the specified position on the screen
+            screen.blit(win_rate_text, win_rate_position)
 
 
 
-    if len(selected_cards) == 10 and runFlop == True:
+
+    if len(selected_cards) == num_players*2 and runFlop == True:
         # Generate and display 5 random cards in the middle of the table
         random_cards = dropDownMenu.get_random_cards([card[1] for card in selected_cards], dropdown_menu.card_options)
         for i, card_name in enumerate(random_cards):
@@ -159,6 +167,7 @@ while running:
             card_position = (540 - 125 + i * 50, 320)  # Adjusted position for 5 cards
             resized_card_image = pygame.transform.scale(card_image, (50, 80))
             screen.blit(resized_card_image, card_position)
+
 
 
 
