@@ -87,7 +87,7 @@ class dropDownMenu:
             self.scrollbar_handle_rect.y = handle_pos
             pygame.draw.rect(self.screen, (100, 100, 100), self.scrollbar_handle_rect)
 
-    # Display the selected card (for demonstration purposes)
+    # Display the selected card 
     def get_selected_card(self):
         return self.selected_card
 
@@ -95,9 +95,8 @@ class dropDownMenu:
     def get_selected_card_image(self):
         return self.card_images.get(self.selected_card)     #gets image from card_images array
 
-    def get_random_cards(selected_cards, card_options):
-        # Filter out selected cards from the card options
-        available_cards = [card for card in card_options if card not in selected_cards]
-        # Select 5 random cards from the available cards
-        random_cards = random.sample(available_cards, 5)
+    def get_random_cards(selected_cards, card_options):     # Takes in the cards already selected and available cards
+        available_cards = [card for card in card_options if card not in selected_cards] # Cards in card_options that are not in selected_cards
+
+        random_cards = random.sample(available_cards, 5)    # Get 5 random cards
         return random_cards

@@ -116,24 +116,23 @@ while running:
 
     # Display selected cards on the screen
     for i, (card_image, card_name) in enumerate(selected_cards):
-        positionValues = ((300,150), (350,150), (675,150), (725,150), (840,320), (890,320), (725,490), (675,490), (350,490), (300,490))        #positions for cards
-        card_position = positionValues[i]  
+        positionValues = ((300,150), (350,150), (675,150), (725,150), (840,320), (890,320), (725,490), (675,490), (350,490), (300,490)) # Positions for cards
+        card_position = positionValues[i]  # Iterate over card positions
 
         resized_card_image = pygame.transform.scale(card_image, (50, 80))
-        screen.blit(resized_card_image, card_position)
+        screen.blit(resized_card_image, card_position)  # Display card at positionValues[i]
 
-        if i == 7:
-            win_rate_text = font.render("Win Rate", True, (255, 255, 255))  # White text
+        if i == 7:   # Print Win Rate placeholder for the bottom right hand     
+            win_rate_text = font.render("Win Rate", True, (255, 255, 255)) 
             screen.blit(win_rate_text, (775, 490))
 
-        if i == 9:
-            win_rate_text = font.render("Win Rate", True, (255, 255, 255))  # White text
+        if i == 9:  # Print Win Rate placholder for the bottom left hand
+            win_rate_text = font.render("Win Rate", True, (255, 255, 255))
             screen.blit(win_rate_text, (400, 490))
 
-        if ((i % 2) != 0 and (i != 7) and (i != 9)):  # Display win rate text next to the hand
-            #winRatePosition = ((card_position[0] + 50, card_position[1]), (card_position[0] + 50, card_position[1]), (card_position[0] + 50, card_position[1]), (card_position[0] + 50, card_position[1]), (card_position[0] + 50, card_position[1]))
-            win_rate_text = font.render("Win Rate", True, (255, 255, 255)) # White text
-            screen.blit(win_rate_text, (card_position[0] + 50, card_position[1]))
+        if ((i % 2) != 0 and (i != 7) and (i != 9)):  # Display Win Rate placeholder for first 3 hands
+            win_rate_text = font.render("Win Rate", True, (255, 255, 255))
+            screen.blit(win_rate_text, (card_position[0] + 50, card_position[1]))   
 
     if len(selected_cards) == 10 and convert == True:
         cards = convert_strings_to_cards(s_cards)
