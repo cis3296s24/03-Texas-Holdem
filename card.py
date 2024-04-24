@@ -204,10 +204,10 @@ def input_card():
     suit = int(input("Enter card suit (1=Hearts, 2=Clubs, 3=Diamonds, 4=Spades): "))
     return Card(rank, suit)
 
-def simulate_poker_games(card_objects):
+def simulate_poker_games(card_objects,num_player):
     #num_players = int(input("Enter the number of players (1-5): "))
     #num_players = min(max(num_players, 1), 5)
-    num_players=5
+    num_players=num_player
     player_wins = [0] * num_players
     players_hands = [card_objects[i*2:(i+1)*2] for i in range(num_players)]
     #for i in range(num_players):
@@ -308,4 +308,3 @@ if __name__ == '__main__':
     win_rates = simulate_poker_games(cards)
     for i, rate in enumerate(win_rates):
         print(f"Player {i+1} Win Rate: {rate*100:.2f}%")
-

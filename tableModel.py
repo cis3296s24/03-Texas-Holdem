@@ -11,10 +11,12 @@ screen = pygame.display.set_mode((1080, 720))
 clock = pygame.time.Clock()
 running = True
 convert = True
-
+num_players = int(sys.argv[1])
+runFlop = True
 pygame.display.set_caption("Texas Hold em Odds Calculator")
 
-card_images_path = "PlayingCards/PNG-cards-1.3/"
+#card_images_path = "PlayingCards/PNG-cards-1.3/"
+card_images_path = "/Users/vincentschetroma/Desktop/03-Texas-Holdem/PlayingCards/PNG-cards-1.3/"
 # Load the image
 pokertable_image = pygame.image.load("pokertable.png")
 
@@ -134,16 +136,17 @@ while running:
             win_rate_text = font.render("Win Rate", True, (255, 255, 255))
             screen.blit(win_rate_text, (card_position[0] + 50, card_position[1]))   
 
-    if len(selected_cards) == 10 and convert == True:
+    if len(selected_cards) == (num_players*2) and convert == True:
         cards = convert_strings_to_cards(s_cards)
-        win_rates = card.simulate_poker_games(cards)
+        win_rates = card.simulate_poker_games(cards,num_players)
     # Check if all cards are selected
-    runFlop = True
 
 
-    if len(selected_cards) == 10:
+    if len(selected_cards) == num_players*2:
         winRatePositions = ((400,165), (775,165), (940,335), (775,505), (400,505))
-        for i in range(5):  # Assuming there are 5 players
+        # Ensure you do not exceed the length of winRatePositions or win_rates
+        num_players = min(len(winRatePositions), len(win_rates))
+        for i in range(num_players):  # Assuming there are 5 players
             player_hand_index = i * 2 + 1  # The index of the second card of each player
             card_position = positionValues[player_hand_index]
             if win_rates:  # Ensure win_rates have been calculated
@@ -156,7 +159,7 @@ while running:
 
 
 
-    if len(selected_cards) == 10 and runFlop == True:
+    if len(selected_cards) == num_players*2 and runFlop == True:
         # Generate and display 5 random cards in the middle of the table
         random_cards = dropDownMenu.get_random_cards([card[1] for card in selected_cards], dropdown_menu.card_options)
         for i, card_name in enumerate(random_cards):
