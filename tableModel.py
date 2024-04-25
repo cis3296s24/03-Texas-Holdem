@@ -15,6 +15,8 @@ num_players = int(sys.argv[1])
 runFlop= False
 current_flop_cards=None
 win_rates= None
+winner_message=None
+
 
 
 pygame.display.set_caption("Texas Hold em Odds Calculator")
@@ -96,6 +98,17 @@ while running:
             elif run_flop_button_rect.collidepoint(event.pos):
                 random_cards = dropDownMenu.get_random_cards([card[1] for card in selected_cards], dropdown_menu.card_options)
                 current_flop_cards = [(dropdown_menu.card_images[card_name], card_name) for card_name in random_cards]
+                s_cards = [card_name for _, card_name in selected_cards]  # Extract card names
+                cards = convert_strings_to_cards(s_cards)
+                # Constructing each player's hand combined with the community cards
+                player_hands = [cards[i * 2:(i + 1) * 2] for i in range(num_players)]
+                community_cards = [convert_to_card(card_name) for _, card_name in current_flop_cards]
+                hands_with_community = [hand + community_cards for hand in player_hands]
+                # Rank all hands and find the highest ranking hand
+                player_results = [card.Ranker.rank_all_hands([hand], return_all=False) for hand in hands_with_community]
+                highest_rank = max(player_results, key=lambda x: x[0])  # Find the highest rank
+                winner_index = player_results.index(highest_rank)  # Get the index of the winning hand
+                winner_message = f"Player {winner_index + 1} is the winner with the highest rank!"
             elif calculation_button_rect.collidepoint(event.pos):
                 s_cards = [card_name for _, card_name in selected_cards]  # Extract card names
                 cards = convert_strings_to_cards(s_cards)
@@ -121,6 +134,14 @@ while running:
     pygame.draw.rect(screen, (0, 0, 255), calculation_button_rect)  # Draw a blue Calculation button
     text_surface = font.render("Calculate", True, (255, 255, 255))
     screen.blit(text_surface, (calculation_button_rect.x + 20, calculation_button_rect.y + 10))
+
+    if winner_message:  # Check if there's a winner message to display
+        font = pygame.font.Font(None, 36)
+        text_surface = font.render(winner_message, True, (0, 0, 0))  # Black text
+        # Position the text at the top center of the screen
+        # Calculate the position so that the text is centered
+        text_rect = text_surface.get_rect(center=(screen.get_width()/2, 10))
+        screen.blit(text_surface, text_rect)
 
 
     # Check if a card is selected

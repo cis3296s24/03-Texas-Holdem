@@ -241,6 +241,36 @@ def simulate_poker_games(card_objects,num_player):
     # Calculate and return win rates and tie rate
     win_rates = [wins / 10000 for wins in player_wins]
     return win_rates
+def simulate_poker_game_with_community_card(card_objects, num_players, community_cards):
+    player_wins = [0] * num_players
+    players_hands = [card_objects[i*2:(i+1)*2] for i in range(num_players)]
+
+    for _ in range(10000):
+        # Create a full deck
+        deck = [Card(count, color) for color in range(1, 5) for count in range(1, 14)]
+        # Remove cards that are already in use (player hands + community cards)
+        flat_player_hands = [card for sublist in players_hands for card in sublist]
+        used_cards = flat_player_hands + community_cards
+        deck = [card for card in deck if card not in used_cards]
+
+        # Shuffle the remaining deck
+        random.shuffle(deck)
+
+        # The community cards are predefined, no need to draw them from the deck
+        player_hands_with_community = [hand + community_cards for hand in players_hands]
+        player_best_hands = [Ranker.rank_all_hands([hand], return_all=False) for hand in player_hands_with_community]
+
+        # Compare and record results
+        best_hand_score = max(player_best_hands)
+        winners = [score == best_hand_score for score in player_best_hands]
+        for i in range(num_players):
+            if winners[i]:
+                player_wins[i] += 1
+
+    # Calculate and return win rates
+    win_rates = [wins / 10000 for wins in player_wins]
+    return win_rates
+
 
 def create_deck():
         return [Card(count, color) for color in range(1, 5) for count in range(1, 14)]
