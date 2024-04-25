@@ -1,9 +1,6 @@
 import pygame
 import random
 
-
-from pygame.locals import *
-
 # Path to the card images
 card_images_path = "/Users/vincentschetroma/Desktop/03-Texas-Holdem/PlayingCards/PNG-cards-1.3/"
 

@@ -106,7 +106,7 @@ while running:
                 hands_with_community = [hand + community_cards for hand in player_hands]
                 # Rank all hands and find the highest ranking hand
                 player_results = [card.Ranker.rank_all_hands([hand], return_all=False) for hand in hands_with_community]
-                highest_rank = max(player_results, key=lambda x: x[0])  # Find the highest rank
+                highest_rank = max(player_results, key=lambda x: (x[0],x[1]))  # Find the highest rank
                 winner_index = player_results.index(highest_rank)  # Get the index of the winning hand
                 winner_message = f"Player {winner_index + 1} is the winner with the highest rank!"
             elif calculation_button_rect.collidepoint(event.pos):
