@@ -10,9 +10,12 @@ pygame.init()
 screen = pygame.display.set_mode((1080, 720))
 clock = pygame.time.Clock()
 running = True
-convert = True
+convert = False
 num_players = int(sys.argv[1])
-runFlop= True
+runFlop= False
+current_flop_cards=None
+win_rates= None
+
 
 pygame.display.set_caption("Texas Hold em Odds Calculator")
 
@@ -73,20 +76,34 @@ reset_button_height = 50
 reset_button_rect = pygame.Rect(50, 650, reset_button_width, reset_button_height)  # Positioned at the bottom left
 
 
+run_flop_button_width = 150
+run_flop_button_height = 50
+run_flop_button_rect = pygame.Rect(250, 650, run_flop_button_width, run_flop_button_height)  # Positioned next to the reset button
+
+calculation_button_width = 150
+calculation_button_height = 50
+calculation_button_rect = pygame.Rect(450, 650, calculation_button_width, calculation_button_height)  # Positioned next to the Run Flop button
+
+
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if reset_button_rect.collidepoint(event.pos):
-                # Terminate Pygame and current script
                 pygame.quit()
-                sys.exit()  # Ensure the current script stops
+                sys.exit()
+            elif run_flop_button_rect.collidepoint(event.pos):
+                random_cards = dropDownMenu.get_random_cards([card[1] for card in selected_cards], dropdown_menu.card_options)
+                current_flop_cards = [(dropdown_menu.card_images[card_name], card_name) for card_name in random_cards]
+            elif calculation_button_rect.collidepoint(event.pos):
+                s_cards = [card_name for _, card_name in selected_cards]  # Extract card names
+                cards = convert_strings_to_cards(s_cards)
+                win_rates = card.simulate_poker_games(cards, num_players)
+                convert = False
             else:
-                # Handle other mouse button events, such as those for the dropdown menu
                 dropdown_menu.handle_events(event)
         else:
-            # Handle non-mouse button events
             dropdown_menu.handle_events(event)
 
     screen.blit(pokertable_image, (-100, 0))
@@ -97,16 +114,26 @@ while running:
     text_surface = font.render("Reset", True, (255, 255, 255))
     screen.blit(text_surface, (reset_button_rect.x + 20, reset_button_rect.y + 10))
 
+    pygame.draw.rect(screen, (0, 255, 0), run_flop_button_rect)  # Draw a green Run Flop button
+    text_surface = font.render("Run Flop", True, (255, 255, 255))
+    screen.blit(text_surface, (run_flop_button_rect.x + 20, run_flop_button_rect.y + 10))
+
+    pygame.draw.rect(screen, (0, 0, 255), calculation_button_rect)  # Draw a blue Calculation button
+    text_surface = font.render("Calculate", True, (255, 255, 255))
+    screen.blit(text_surface, (calculation_button_rect.x + 20, calculation_button_rect.y + 10))
+
+
     # Check if a card is selected
     selected_card = dropdown_menu.get_selected_card()
     selected_card_image = dropdown_menu.get_selected_card_image()
 
     if selected_card:
-        # Add the selected card and its position to the list
-        selected_cards.append((selected_card_image, selected_card))
-        s_cards.append(selected_card)
-        # Reset the selected card in the drop-down menu
-        dropdown_menu.selected_card = None
+        if len(selected_cards) < num_players * 2:
+            # Add the selected card and its position to the list
+            selected_cards.append((selected_card_image, selected_card))
+            s_cards.append(selected_card)
+            # Reset the selected card in the drop-down menu
+            dropdown_menu.selected_card = None
 
     # Display selected cards on the screen
     for i, (card_image, card_name) in enumerate(selected_cards):
@@ -136,34 +163,40 @@ while running:
 
 
 
-    if len(selected_cards) == num_players*2:
-        winRatePositions = ((400, 165), (775, 165), (940, 335), (775, 505), (400, 505))
-        # Ensure you do not exceed the length of winRatePositions or win_rates
+    # if len(selected_cards) == num_players*2:
+    #     winRatePositions = ((400, 165), (775, 165), (940, 335), (775, 505), (400, 505))
+    #     # Ensure you do not exceed the length of winRatePositions or win_rates
+    #     num_players = min(len(winRatePositions), len(win_rates))
+    #
+    #     for i in range(num_players):  # Loop through each player
+    #         player_hand_index = i * 2 + 1  # The index of the second card of each player
+    #         card_position = positionValues[player_hand_index]
+    #
+    #         if win_rates:  # Ensure win_rates have been calculated
+    #             win_rate_text = font.render(f"{win_rates[i] * 100:.2f}%", True, (255, 255, 255))  # White text
+    #         else:
+    #             win_rate_text = font.render("Calculating...", True, (255, 255, 255))  # Before win rates are calculated
+    #
+    #         # Set the win rate position based on predefined positions
+    #         win_rate_position = winRatePositions[i]
+    #
+    #         # Display the win rate text at the specified position on the screen
+    #         screen.blit(win_rate_text, win_rate_position)
+    if win_rates:
+        winRatePositions = ((400, 165), (775, 165), (940, 335), (775, 505), (400, 505))# Only attempt to display win rates if they've been calculated
         num_players = min(len(winRatePositions), len(win_rates))
-
-        for i in range(num_players):  # Loop through each player
-            player_hand_index = i * 2 + 1  # The index of the second card of each player
+        for i in range(num_players):
+            player_hand_index = i * 2 + 1
             card_position = positionValues[player_hand_index]
-
-            if win_rates:  # Ensure win_rates have been calculated
-                win_rate_text = font.render(f"{win_rates[i] * 100:.2f}%", True, (255, 255, 255))  # White text
-            else:
-                win_rate_text = font.render("Calculating...", True, (255, 255, 255))  # Before win rates are calculated
-
-            # Set the win rate position based on predefined positions
+            win_rate_text = font.render(f"{win_rates[i] * 100:.2f}%", True, (255, 255, 255))
             win_rate_position = winRatePositions[i]
-
-            # Display the win rate text at the specified position on the screen
             screen.blit(win_rate_text, win_rate_position)
 
 
 
 
-    if len(selected_cards) == num_players*2 and runFlop == True:
-        # Generate and display 5 random cards in the middle of the table
-        random_cards = dropDownMenu.get_random_cards([card[1] for card in selected_cards], dropdown_menu.card_options)
-        for i, card_name in enumerate(random_cards):
-            card_image = dropdown_menu.card_images[card_name]
+    if current_flop_cards:
+        for i, (card_image, card_name) in enumerate(current_flop_cards):
             card_position = (540 - 125 + i * 50, 320)  # Adjusted position for 5 cards
             resized_card_image = pygame.transform.scale(card_image, (50, 80))
             screen.blit(resized_card_image, card_position)
