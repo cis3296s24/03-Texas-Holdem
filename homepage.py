@@ -61,6 +61,9 @@ start_button_height = 50
 start_button_rect = pygame.Rect(window_center_x - start_button_width // 2, window_center_y + 100 * 1.5, start_button_width, start_button_height)
 button_radius = 10  # Define the radius for rounded corners
 
+# "?" button properties
+help_button_rect = pygame.Rect(20, 20, 40, 40)
+
 # Variable to store number of players
 num_players = 1
 
@@ -89,6 +92,10 @@ def toggle_dark_mode():
         background_image = pygame.image.load("pokerTableLight.png").convert()
     background_image = pygame.transform.scale(background_image, (window_width, window_height))
 
+# Function to open game instructions in a new Python file
+def open_instructions():
+    subprocess.Popen(["python", "instructions.py"], stdin=subprocess.PIPE)
+
 # Main loop
 running = True
 while running:
@@ -111,6 +118,15 @@ while running:
             elif dark_mode_toggle_rect.collidepoint(event.pos):
                 # If the dark mode toggle is clicked, toggle dark mode
                 toggle_dark_mode()
+            elif help_button_rect.collidepoint(event.pos):
+                # If the "?" button is clicked, open game instructions in a new Python file
+                open_instructions()
+        elif event.type == pygame.MOUSEMOTION:
+            # If the mouse hovers over the start button, move it down slightly
+            if start_button_rect.collidepoint(event.pos):
+                start_button_rect.y = window_center_y + 100 * 1.5 + 5  # Move down by 5 pixels
+            else:
+                start_button_rect.y = window_center_y + 100 * 1.5  # Reset to original position
 
     # Draw the background image
     window.blit(background_image, (0, 0))
@@ -160,6 +176,12 @@ while running:
     text_surface = font2.render(text, True, LIGHT_MODE["text"] if not dark_mode else DARK_MODE["text"])
     text_rect = text_surface.get_rect(center=dark_mode_toggle_rect.center)
     window.blit(text_surface, text_rect)
+
+    # Draw the "?" button
+    pygame.draw.rect(window, LIGHT_MODE["button"], help_button_rect)
+    help_text_surface = font2.render("?", True, LIGHT_MODE["text"])
+    help_text_rect = help_text_surface.get_rect(center=help_button_rect.center)
+    window.blit(help_text_surface, help_text_rect)
 
     # Update the display
     pygame.display.update()
