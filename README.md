@@ -28,6 +28,7 @@ Above is an image of what the application looks like.
 3. Git clone https://github.com/cis3296s24/03-Texas-Holdem
 4. Navigate to the project directory: cd projectName
 5. To run the game, execute the following command in terminal: python homepage.py
+6. or simply download the lastest release and run the homepage.exe file in the dist folder
 
 Pygame should run and display, if issues, following tips may be helpful:
 - **Main Branch**: Use for stable and latest releases.
