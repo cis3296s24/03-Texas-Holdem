@@ -31,6 +31,12 @@ class dropDownMenu:
 # Rectangles for dropdown button and options
 
     def handle_events(self, event):
+        """
+        Handles mouse events to control the dropdown menu operations like opening the menu, selecting cards, and scrolling.
+
+        Args:
+            event (pygame.event.Event): The event to handle, typically mouse events.
+        """
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:  # Left mouse button
                 if self.dropdown_button_rect.collidepoint(event.pos):
@@ -65,6 +71,9 @@ class dropDownMenu:
     # Draw the dropdown button
 
     def draw(self):
+        """
+        Draws the dropdown menu components including the button, options, and scrollbar on the specified screen.
+        """
         pygame.draw.rect(self.screen, (200, 200, 200), self.dropdown_button_rect)
         pygame.draw.polygon(self.screen, (0, 0, 0), [(120, 115), (130, 115), (125, 125)])
         if self.dropdown_open:
@@ -86,13 +95,35 @@ class dropDownMenu:
 
     # Display the selected card (for demonstration purposes)
     def get_selected_card(self):
+        """
+        Returns the name of the currently selected card.
+
+        Returns:
+            str or None: The name of the selected card or None if no card is selected.
+        """
         return self.selected_card
 
 
     def get_selected_card_image(self):
+        """
+        Retrieves the Pygame image surface associated with the selected card.
+
+        Returns:
+            pygame.Surface or None: The Pygame surface for the selected card image, or None if no card is selected.
+        """
         return self.card_images.get(self.selected_card)     #gets image from card_images array
 
     def get_random_cards(selected_cards, card_options):
+        """
+        Selects 5 random cards from available options excluding already selected cards.
+
+        Args:
+            selected_cards (list[str]): A list of card names that are already selected.
+            card_options (list[str]): A list of all possible card names.
+
+        Returns:
+            list[str]: A list of 5 randomly selected card names.
+        """
         # Filter out selected cards from the card options
         available_cards = [card for card in card_options if card not in selected_cards]
         # Select 5 random cards from the available cards
