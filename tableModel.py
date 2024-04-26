@@ -23,7 +23,7 @@ pygame.display.set_caption("Texas Hold em Odds Calculator")
 
 card_images_path = "PlayingCards/PNG-cards-1.3/"
 # Load the image
-pokertable_image = pygame.image.load("pokertable.png")
+pokertable_image = pygame.image.load("pokerTableLight.png")
 
 # Resize the image to fit the screen
 pokertable_image = pygame.transform.scale(pokertable_image, (1280, 720))
@@ -116,22 +116,39 @@ while running:
                 convert = False
             else:
                 dropdown_menu.handle_events(event)
+        elif event.type == pygame.MOUSEMOTION:
+            # Move the buttons slightly down if the mouse hovers over them
+            if reset_button_rect.collidepoint(event.pos):
+                reset_button_rect.y = 655
+            else:
+                reset_button_rect.y = 650  # Reset to original position
+
+            if run_flop_button_rect.collidepoint(event.pos):
+                run_flop_button_rect.y = 655
+            else:
+                run_flop_button_rect.y = 650  # Reset to original position
+
+            if calculation_button_rect.collidepoint(event.pos):
+                calculation_button_rect.y = 655
+            else:
+                calculation_button_rect.y = 650  # Reset to original position
+
         else:
             dropdown_menu.handle_events(event)
 
     screen.blit(pokertable_image, (-100, 0))
     dropdown_menu.draw()
 
-    pygame.draw.rect(screen, (255, 0, 0), reset_button_rect)  # Draw a red reset button
+    pygame.draw.rect(screen, (255, 0, 0), reset_button_rect, border_radius=10)  # Draw a red reset button
     font = pygame.font.Font(None, 36)
     text_surface = font.render("Reset", True, (255, 255, 255))
     screen.blit(text_surface, (reset_button_rect.x + 20, reset_button_rect.y + 10))
 
-    pygame.draw.rect(screen, (0, 255, 0), run_flop_button_rect)  # Draw a green Run Flop button
+    pygame.draw.rect(screen, (0, 255, 0), run_flop_button_rect, border_radius=10)  # Draw a green Run Flop button
     text_surface = font.render("Run Flop", True, (255, 255, 255))
     screen.blit(text_surface, (run_flop_button_rect.x + 20, run_flop_button_rect.y + 10))
 
-    pygame.draw.rect(screen, (0, 0, 255), calculation_button_rect)  # Draw a blue Calculation button
+    pygame.draw.rect(screen, (0, 0, 255), calculation_button_rect, border_radius=10)  # Draw a blue Calculation button
     text_surface = font.render("Calculate", True, (255, 255, 255))
     screen.blit(text_surface, (calculation_button_rect.x + 20, calculation_button_rect.y + 10))
 
@@ -140,7 +157,7 @@ while running:
         text_surface = font.render(winner_message, True, (0, 0, 0))  # Black text
         # Position the text at the top center of the screen
         # Calculate the position so that the text is centered
-        text_rect = text_surface.get_rect(center=(screen.get_width()/2, 10))
+        text_rect = text_surface.get_rect(center=(screen.get_width()/2, 90))
         screen.blit(text_surface, text_rect)
 
 
@@ -159,23 +176,23 @@ while running:
     # Display selected cards on the screen
     for i, (card_image, card_name) in enumerate(selected_cards):
         positionValues = ((300,150), (350,150), (675,150), (725,150), (840,320), (890,320), (725,490), (675,490), (350,490), (300,490))        #positions for cards
-        card_position = positionValues[i]  
+        card_position = positionValues[i]
 
         resized_card_image = pygame.transform.scale(card_image, (50, 80))
         screen.blit(resized_card_image, card_position)
 
         if i == 7:
             win_rate_text = font.render("Win Rate", True, (255, 255, 255))  # White text
-            screen.blit(win_rate_text, (775, 490))
+            screen.blit(win_rate_text, (785, 490))
 
         if i == 9:
             win_rate_text = font.render("Win Rate", True, (255, 255, 255))  # White text
-            screen.blit(win_rate_text, (400, 490))
+            screen.blit(win_rate_text, (410, 490))
 
         if ((i % 2) != 0 and (i != 7) and (i != 9)):  # Display win rate text next to the hand
             #winRatePosition = ((card_position[0] + 50, card_position[1]), (card_position[0] + 50, card_position[1]), (card_position[0] + 50, card_position[1]), (card_position[0] + 50, card_position[1]), (card_position[0] + 50, card_position[1]))
             win_rate_text = font.render("Win Rate", True, (255, 255, 255)) # White text
-            screen.blit(win_rate_text, (card_position[0] + 50, card_position[1]))
+            screen.blit(win_rate_text, (card_position[0] + 60, card_position[1]))
 
     if len(selected_cards) == (num_players*2) and convert == True:
         cards = convert_strings_to_cards(s_cards)
@@ -204,7 +221,7 @@ while running:
     #         # Display the win rate text at the specified position on the screen
     #         screen.blit(win_rate_text, win_rate_position)
     if win_rates:
-        winRatePositions = ((400, 165), (775, 165), (940, 335), (775, 505), (400, 505))# Only attempt to display win rates if they've been calculated
+        winRatePositions = ((420, 175), (795, 175), (960, 345), (795, 515), (420, 515))# Only attempt to display win rates if they've been calculated
         num_players = min(len(winRatePositions), len(win_rates))
         for i in range(num_players):
             player_hand_index = i * 2 + 1
